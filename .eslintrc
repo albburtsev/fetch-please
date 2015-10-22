@@ -115,7 +115,6 @@
             "beforeColon": false,
             "afterColon": true
         }],
-        "lines-around-comment": 1,
         "linebreak-style": [2, "unix"],
         "max-nested-callbacks": [2, 2],
         "new-cap": 2,

@@ -10,8 +10,8 @@ This library provides simple API with cancelable requests and XHR under the hood
 
 ## Install
 
-```js
-npm i talaria --save
+```bash
+npm install talaria --save
 ```
 
 ## Examples
@@ -66,7 +66,7 @@ let SmartComponent = React.createClass({
 	 * Application doesn't need in requested data
 	 */
 	componentWillUnmount() {
-		// Abort all opened requestes for this instance of Talaria
+		// Abort all opened requests for this instance of Talaria
 		api.abortAll();
 	}
 });
