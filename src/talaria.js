@@ -1,1 +1,10 @@
-console.log('Hello, World!');
+/**
+ * @class
+ */
+class Talaria {
+    constructor() {
+        // @todo
+    }
+}
+
+export default Talaria;
