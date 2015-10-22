@@ -1,6 +1,6 @@
 # Talaria.js
 
-Talaria.js — lightweight HTTP-transport that supports [Promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise) and has XHR under the hood.
+Talaria.js — HTTP-transport that supports [Promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise) and cancelable requests (XHR). Great for React!
 
 ## Justification
 
@@ -45,7 +45,7 @@ let SmartComponent = React.createClass({
 			.then((json) => {
 				// List of users successfully received
 				this.setState({
-					loading: true,
+					loading: false,
 					users: json.users
 				});
 			})
