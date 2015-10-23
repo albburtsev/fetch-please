@@ -8,6 +8,7 @@
     "build:umd": "webpack src/talaria.js dist/talaria.js --config webpack.config.js",
     "build:umd:min": "NODE_ENV=production webpack src/talaria.js dist/talaria.min.js --config webpack.config.js",
     "build": "npm run build:umd && npm run build:umd:min",
+    "build:watch": "npm run build:umd -- --watch",
     "prepublish": "npm run build",
     "test": "mocha --compilers js:babel/register --recursive",
     "test:watch": "npm test --  --watch"

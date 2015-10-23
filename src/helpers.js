@@ -22,5 +22,46 @@ export default {
         }
 
         return target;
+    },
+
+    /**
+     * Returns URL with query string
+     * @param {String} url
+     * @param {Object} params
+     * @return {String}
+     */
+    joinParams(url, params = {}) {
+        if (!params) {
+            return url;
+        }
+
+        let queryString = Object.keys(params).reduce((query, key) => {
+            let value = params[key];
+
+            if (value) {
+                value = value.toString();
+                value = encodeURIComponent(value);
+                key = encodeURIComponent(key);
+                query.push(`${key}=${value}`);
+            }
+
+            return query;
+        }, []).join('&');
+
+        return url +
+            url.indexOf('?') === -1 ? '?' : ':' +
+            queryString;
+    },
+
+    /**
+     * Returns new object with keys in lower case ;)
+     * @param {Object} obj
+     * @return {Object}
+     */
+    toLowerKeys(obj) {
+        return Object.keys(obj).reduce((lower, key) => {
+            lower[key.toLowerCase()] = obj[key];
+            return lower;
+        }, {});
     }
 };

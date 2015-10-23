@@ -7,7 +7,7 @@ import Talaria from '../src/talaria';
 let api = new Talaria(),
     XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 
-describe('HTTP method GET', () => {
+describe('Method getRequest()', () => {
     before(function() {
         this.requests = [];
 
@@ -38,13 +38,32 @@ describe('HTTP method GET', () => {
         // Request appears in list
         expect(this.requests.length).to.equal(1);
 
-        // Fake response
-        req.respond(200, {'Content-Type': 'application/json'}, '{a:1}');
+        // Fake response with header in lower case
+        request.respond(200, {'content-type': 'application/json'}, '{"a":1}');
 
         // Compare JSON in callback
         return promise.then((data) => {
             expect(data).to.deep.equal({a: 1});
         });
+    });
+
+    after(function() {
+        this.requests = [];
+        XMLHttpRequest.onCreate = null;
+    });
+});
+
+describe('Method get()', () => {
+    before(function() {
+        this.requests = [];
+
+        XMLHttpRequest.onCreate = (xhr) => {
+            this.requests.push(xhr);
+        };
+    });
+
+    let api = new Talaria('/api/', {
+        XMLHttpRequest: XMLHttpRequest
     });
 
     it('Method get() exists', function() {
@@ -58,10 +77,11 @@ describe('HTTP method GET', () => {
         let promise = api.get('users');
 
         // Counter of requests should be incremented
-        expect(this.requests.length).to.equal(2);
+        expect(this.requests.length).to.equal(1);
 
         // Create fake response
-        req.respond(200, {'Content-Type': 'application/json'}, '{a:1}');
+        let request = this.requests[0];
+        request.respond(200, {'Content-Type': 'application/json'}, '{"a":1}');
 
         // Compare JSON in callback
         return promise.then((data) => {
