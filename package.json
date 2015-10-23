@@ -10,7 +10,7 @@
     "build": "npm run build:umd && npm run build:umd:min",
     "prepublish": "npm run build",
     "test": "mocha --compilers js:babel/register --recursive",
-    "test:watch": "npm test --  --watch --reporter min"
+    "test:watch": "npm test --  --watch"
   },
   "repository": {
     "type": "git",

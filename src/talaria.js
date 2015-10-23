@@ -1,16 +1,34 @@
+import {assign} from './helpers';
+
 /**
  * @class
  * HTTP-transport based on XHR
+ * @property {String} path Common path
+ * @property {Number} timeout Timeout (in milliseconds)
+ * @property {Object} headers Common headers
+ * @property {Array} opened List of opened requests
+ * @property {XMLHttpRequest} XMLHttpRequest XHR interface
+ *
+ * @see https://xhr.spec.whatwg.org/
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
  */
 class Talaria {
     /**
      * @param {String} path Common path for all requests
      * @param {Object} [settings] Object with settings
      * @param {Number} [settings.timeout = 0]
+     * @param {Object} [settings.XMLHttpRequest = global.XMLHttpRequest]
      * @param {Object|Function} [settings.headers = {}]
      */
-    constructor() {
-        // @todo
+    constructor(path = '', settings = {}) {
+        this.path = path;
+        this.opened = [];
+
+        assign(this, {
+            timeout: 0,
+            headers: {},
+            XMLHttpRequest: global.XMLHttpRequest
+        }, settings);
     }
 
     /**
