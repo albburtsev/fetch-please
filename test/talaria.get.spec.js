@@ -20,11 +20,11 @@ describe('Method getRequest()', () => {
         XMLHttpRequest: XMLHttpRequest
     });
 
-    it('Method getRequest() exists', function() {
+    it('exists', function() {
         expect(api.getRequest).to.be.a('function');
     });
 
-    it('Call method getRequest()', function() {
+    it('behaves correctly', function() {
         // Empty list of array
         expect(this.requests.length).to.equal(0);
 
@@ -66,11 +66,11 @@ describe('Method get()', () => {
         XMLHttpRequest: XMLHttpRequest
     });
 
-    it('Method get() exists', function() {
+    it('exists', function() {
         expect(api.get).to.be.a('function');
     });
 
-    it('Call method get()', function() {
+    it('behaves correctly', function() {
         expect(this.requests.length).to.equal(0);
 
         // Call method get()

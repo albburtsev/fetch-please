@@ -30,7 +30,7 @@ export default {
      * @param {Object} params
      * @return {String}
      */
-    joinParams(url, params = {}) {
+    joinParams(url, params = null) {
         if (!params) {
             return url;
         }
@@ -48,8 +48,15 @@ export default {
             return query;
         }, []).join('&');
 
+        if (!queryString) {
+            return url;
+        }
+
+        // Trim trailing "?"
+        url = url.replace(/\?+$/, '');
+
         return url +
-            url.indexOf('?') === -1 ? '?' : ':' +
+            (url.indexOf('?') === -1 ? '?' : '&') +
             queryString;
     },
 

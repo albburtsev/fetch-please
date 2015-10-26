@@ -4,7 +4,7 @@ import {expect} from 'chai';
 import Talaria from '../src/talaria';
 
 describe('Class Talaria', () => {
-    it('Constructor Talaria exist', () => {
+    it('exist', () => {
         expect(Talaria).to.be.an.instanceof(Function);
     });
 });
@@ -21,7 +21,7 @@ describe('Instance of Talaria', () => {
         headers: HEADERS
     });
 
-    it('Constructor Talaria exist', () => {
+    it('has all required properties', () => {
         expect(api).to.be.an.instanceof(Talaria);
         expect(api.path).to.equal(PATH);
         expect(api.timeout).to.equal(TIMEOUT);
