@@ -67,7 +67,7 @@ let SmartComponent = React.createClass({
 	 */
 	componentWillUnmount() {
 		// Abort all opened requests for this instance of Talaria
-		api.abortAll();
+		api.abort();
 	}
 });
 ```
@@ -101,6 +101,10 @@ If you want to abort individual request, you can do this with special API:
 
 // ... same part in previous example
 ```
+
+## Requirements
+
+TODO
 
 ## API
 

@@ -4,6 +4,16 @@ export const HTTP_METHOD_GET = 'GET';
 export const HTTP_METHOD_PUT = 'PUT';
 export const HTTP_METHOD_POST = 'POST';
 export const HTTP_METHOD_DELETE = 'DELETE';
+export const ALLOWED_METHODS = [
+    HTTP_METHOD_GET,
+    HTTP_METHOD_PUT,
+    HTTP_METHOD_POST,
+    HTTP_METHOD_DELETE
+];
+
+export const ERROR_XHR_NOT_FOUND = 'Constructor XMLHttpRequest not found';
+export const ERROR_PROMISE_NOT_FOUND = 'Constructor Promise not found';
+export const ERROR_UNKNOWN_HTTP_METHOD = 'Unknown HTTP method';
 
 /**
  * @class
@@ -54,25 +64,40 @@ class Talaria {
      */
     request(method, url, data) {
         if (!this.XMLHttpRequest) {
-            throw new Error('Constructor XMLHttpRequest not found');
+            throw new Error(ERROR_XHR_NOT_FOUND);
         }
 
         if (!global.Promise) {
-            throw new Error('Constructor Promise not found');
+            throw new Error(ERROR_PROMISE_NOT_FOUND);
+        }
+
+        if (ALLOWED_METHODS.indexOf(method) === -1) {
+            throw new Error(ERROR_UNKNOWN_HTTP_METHOD);
         }
 
         let _handle = this.handleResponse,
             request = new this.XMLHttpRequest(),
             promise = new Promise(function (resolve, reject) {
                 request.addEventListener('load', function() {
-                    let {status, responseText, responseHeaders} = this,
-                        {error, errorText, payload} = _handle(status, responseText, responseHeaders);
+                    let {error, payload} = _handle(this);
 
                     if (error) {
-                        reject(error, errorText);
+                        reject(new Error(this));
                     } else {
                         resolve(payload);
                     }
+                });
+
+                request.addEventListener('error', function() {
+                    reject(new Error(this));
+                });
+
+                request.addEventListener('abort', function() {
+                    reject(new Error(this));
+                });
+
+                request.addEventListener('timeout', function() {
+                    reject(new Error(this));
                 });
             });
 
@@ -80,8 +105,15 @@ class Talaria {
         request.open(method, url);
         request.send(data);
 
-        // Add request into list
-        this.opened.push(request);
+        // Add request into list of opened requests
+        this.add(request);
+
+        // Handle removing request from list of opened requests
+        promise.then(() => {
+            this.close(request);
+        }, () => {
+            this.close(request);
+        });
 
         return {request, promise};
     }
@@ -91,6 +123,25 @@ class Talaria {
      */
     abort() {
         // @todo
+    }
+
+    /**
+     * Adds request to list of opened requests
+     * @param {XMLHttpRequest} request
+     */
+    add(request) {
+        this.opened.push(request);
+    }
+
+    /**
+     * Deletes request from list of opened requests
+     * @param {XMLHttpRequest} request
+     */
+    close(request) {
+        let idx = this.opened.indexOf(request);
+        if (idx !== -1) {
+            this.opened.splice(idx, 1);
+        }
     }
 
     /**
@@ -183,47 +234,42 @@ class Talaria {
     }
 
     /**
-     * Handles response
-     * @param {String} status
-     * @param {String} text
-     * @param {Object} headers
+     * Handles XHR response
+     * @param {XMLHttpRequest} xhr
+     * @param {String} xhr.status
+     * @param {String} xhr.responseText
+     * @see https://xhr.spec.whatwg.org/#interface-xmlhttprequest
      * @return {Object}
      */
-    handleResponse(status, text, headers = {}) {
+    handleResponse(xhr) {
         const MIN_SUCCESS_CODE = 200;
         const MAX_SUCCESS_CODE = 299;
         const CONTENT_TYPE_JSON_VALUE = 'application/json';
 
+        let {status, responseText} = xhr;
+
         // If status < 200 or status >= 200 then return error
         if (status < MIN_SUCCESS_CODE || status > MAX_SUCCESS_CODE) {
-            return {
-                error: true,
-                errorText: 'HTTP error'
-            };
+            return {error: true};
         }
 
         // If header Content-Type has value "application/json" then parse text as JSON
-        headers = toLowerKeys(headers);
-        if (headers) {
-            let contentType = headers['content-type'] || '';
+        let contentType = xhr.getResponseHeader('Content-Type');
+        if (contentType) {
             contentType = contentType.toLowerCase();
 
             if (contentType.indexOf(CONTENT_TYPE_JSON_VALUE) !== -1) {
                 try {
-                    let data = JSON.parse(text);
+                    let data = JSON.parse(responseText);
                     return {payload: data};
                 } catch (e) {
-                    // Error occured
-                    return {
-                        error: true,
-                        errorText: 'JSON parse error'
-                    };
+                    return {error: true};
                 }
             }
         }
 
         // Just return given text
-        return {payload: text};
+        return {payload: responseText};
     }
 }
 
