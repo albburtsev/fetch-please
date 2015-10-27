@@ -1,4 +1,4 @@
-import {assign, joinParams, toLowerKeys} from './helpers';
+import {assign, joinParams} from './helpers';
 
 export const HTTP_METHOD_GET = 'GET';
 export const HTTP_METHOD_PUT = 'PUT';
@@ -72,12 +72,12 @@ class Talaria {
     /**
      * Creates XHR instance and Promise instance
      * @param {String} method HTTP method
-     * @param {String} url
+     * @param {String} path
      * @param {Object} data
      * @param {Object} settings
      * @return {Object}
      */
-    request(method, url, data = null, settings = null) {
+    request(method, path, data = null, settings = null) {
         if (!this.XMLHttpRequest) {
             throw new Error(ERROR_XHR_NOT_FOUND);
         }
@@ -115,7 +115,8 @@ class Talaria {
             // Handle JSON in response
             .then(this.handleJson);
 
-        // Open request
+        // Form URL without normalizing and open request
+        let url = this.path + path;
         xhr.open(method, url);
 
         // Set headers
@@ -156,9 +157,7 @@ class Talaria {
      * Aborts all opened requests
      */
     abort() {
-        this.opened.forEach((xhr) => {
-            xhr.abort();
-        });
+        this.opened.forEach((xhr) => xhr.abort());
     }
 
     /**

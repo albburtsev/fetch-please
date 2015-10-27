@@ -4,8 +4,7 @@ import sinon from 'sinon';
 import {expect} from 'chai';
 import Talaria from '../src/talaria';
 
-let api = new Talaria(),
-    XMLHttpRequest = sinon.useFakeXMLHttpRequest();
+let XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 
 describe('Method getRequest()', () => {
     before(function() {

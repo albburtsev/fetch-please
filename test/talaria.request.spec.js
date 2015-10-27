@@ -36,25 +36,12 @@ describe('Method request()', () => {
         }).to.throw(ERROR_UNKNOWN_HTTP_METHOD);
     });
 
-    it('should change number of opened requests', function() {
-        expect(this.api.opened.length).to.equal(0);
+    it('should join paths', function() {
+        let api = new Talaria('/api/', {XMLHttpRequest: XMLHttpRequest});
 
-        let first = this.api.request('GET', '/');
-        expect(this.api.opened.length).to.equal(1);
-
-        let second = this.api.request('GET', '/');
-        expect(this.api.opened.length).to.equal(2);
-
-        first.xhr.respond(200, {'content-type': 'application/json'}, '{}');
-        second.xhr.respond(200, {'content-type': 'application/json'}, '{}');
-
-        return first.promise
-            .then(() => {
-                return second.promise;
-            })
-            .then((data) => {
-                expect(this.api.opened.length).to.equal(0);
-            });
+        // URLs without normilizing
+        expect(api.request('GET', '/users').xhr.url).to.equal('/api//users');
+        expect(api.request('GET', 'users').xhr.url).to.equal('/api/users');
     });
 
     it('should set headers', function() {
@@ -84,6 +71,27 @@ describe('Method request()', () => {
         let {xhr} = preset.request('GET', '/');
 
         expect(xhr.timeout).to.equal(1);
+    });
+
+    it('should change number of opened requests', function() {
+        expect(this.api.opened.length).to.equal(0);
+
+        let first = this.api.request('GET', '/');
+        expect(this.api.opened.length).to.equal(1);
+
+        let second = this.api.request('GET', '/');
+        expect(this.api.opened.length).to.equal(2);
+
+        first.xhr.respond(200, {'content-type': 'application/json'}, '{}');
+        second.xhr.respond(200, {'content-type': 'application/json'}, '{}');
+
+        return first.promise
+            .then(() => {
+                return second.promise;
+            })
+            .then((data) => {
+                expect(this.api.opened.length).to.equal(0);
+            });
     });
 
     it('should handle unacceptable HTTP code', function() {
