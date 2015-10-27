@@ -36,8 +36,7 @@ export const ERROR_RESOURCE_FAILED = 'Resource failed to load';
  * @property {XMLHttpRequest} XMLHttpRequest XHR interface
  * @property {Boolean} cors ```true``` if supported Cross-Origin Resource Sharing
  *
- * @todo: methods put/putRequest
- * @todo: methods delete/deleteRequest
+ * @todo: callback for headers in constructor
  * @todo: cors
  *
  * @see https://xhr.spec.whatwg.org/
@@ -50,7 +49,6 @@ class FetchPlease {
      * @param {Object} [settings] Object with settings
      * @param {Number} [settings.timeout = 0]
      * @param {Object} [settings.XMLHttpRequest = global.XMLHttpRequest]
-     * @param {Function} [settings.handleResponse] Callback for handling all responses
      * @param {Object|Function} [settings.headers = {}]
      */
     constructor(path = '', settings = {}) {
@@ -103,6 +101,10 @@ class FetchPlease {
             });
 
         settings = settings || {};
+
+        let handleJson = settings.handleJson || this.handleJson,
+            handleResponse = settings.handleResponse || this.handleResponse;
+
         promise = promise
             // Remove request from list of opened requests
             .then(() => this.close(xhr))
@@ -111,9 +113,9 @@ class FetchPlease {
                 throw new Error(error);
             })
             // Handle response
-            .then(this.handleResponse)
+            .then(handleResponse)
             // Handle JSON in response
-            .then(this.handleJson);
+            .then(handleJson);
 
         // Form URL without normalizing and open request
         let url = this.path + path;
