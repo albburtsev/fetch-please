@@ -35,18 +35,17 @@ export default {
             return url;
         }
 
-        let queryString = Object.keys(params).reduce((query, key) => {
-            let value = params[key];
+        let queryString = Object.keys(params)
+            .filter((key) => key && params[key])
+            .map((key) => {
+                let value = params[key].toString();
 
-            if (value) {
-                value = value.toString();
-                value = encodeURIComponent(value);
                 key = encodeURIComponent(key);
-                query.push(`${key}=${value}`);
-            }
+                value = encodeURIComponent(value);
 
-            return query;
-        }, []).join('&');
+                return `${key}=${value}`;
+            })
+            .join('&');
 
         if (!queryString) {
             return url;
