@@ -25,6 +25,14 @@ export const ERROR_UNKNOWN_HTTP_METHOD = 'Unknown HTTP method';
  * @property {XMLHttpRequest} XMLHttpRequest XHR interface
  * @property {Boolean} cors ```true``` if supported Cross-Origin Resource Sharing
  *
+ * @todo: timeout
+ * @todo: pipe for handling response: handleResponse | handleJson
+ * @todo: method abort
+ * @todo: methods post/postRequest
+ * @todo: methods put/putRequest
+ * @todo: methods delete/deleteRequest
+ * @todo: cors
+ *
  * @see https://xhr.spec.whatwg.org/
  * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
  * @see http://www.html5rocks.com/en/tutorials/cors/
@@ -76,9 +84,9 @@ class Talaria {
         }
 
         let _handle = this.handleResponse,
-            request = new this.XMLHttpRequest(),
+            xhr = new this.XMLHttpRequest(),
             promise = new Promise(function (resolve, reject) {
-                request.addEventListener('load', function() {
+                xhr.addEventListener('load', function() {
                     let {error, payload} = _handle(this);
 
                     if (error) {
@@ -88,43 +96,43 @@ class Talaria {
                     }
                 });
 
-                request.addEventListener('error', function() {
+                xhr.addEventListener('error', function() {
                     reject(new Error(this));
                 });
 
-                request.addEventListener('abort', function() {
+                xhr.addEventListener('abort', function() {
                     reject(new Error(this));
                 });
 
-                request.addEventListener('timeout', function() {
+                xhr.addEventListener('timeout', function() {
                     reject(new Error(this));
                 });
             });
 
         // Open request
-        request.open(method, url);
+        xhr.open(method, url);
 
         // Set headers
         // Order of method's calls is important
         // You must call setRequestHeader() after open(), but before send()
         // @see: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#setRequestHeader()
         let headers = assign({}, this.headers, settings && settings.headers);
-        this.setHeaders(request, headers);
+        this.setHeaders(xhr, headers);
 
         // Send request
-        request.send(data);
+        xhr.send(data);
 
         // Add request into list of opened requests
-        this.add(request);
+        this.add(xhr);
 
         // Handle removing request from list of opened requests
         promise.then(() => {
-            this.close(request);
+            this.close(xhr);
         }, () => {
-            this.close(request);
+            this.close(xhr);
         });
 
-        return {request, promise};
+        return {xhr, promise};
     }
 
     /**
@@ -149,18 +157,18 @@ class Talaria {
 
     /**
      * Adds request to list of opened requests
-     * @param {XMLHttpRequest} request
+     * @param {XMLHttpRequest} xhr
      */
-    add(request) {
-        this.opened.push(request);
+    add(xhr) {
+        this.opened.push(xhr);
     }
 
     /**
      * Deletes request from list of opened requests
-     * @param {XMLHttpRequest} request
+     * @param {XMLHttpRequest} xhr
      */
-    close(request) {
-        let idx = this.opened.indexOf(request);
+    close(xhr) {
+        let idx = this.opened.indexOf(xhr);
         if (idx !== -1) {
             this.opened.splice(idx, 1);
         }

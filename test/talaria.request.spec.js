@@ -44,8 +44,8 @@ describe('Method request()', () => {
 
         expect(this.api.opened.length).to.equal(2);
 
-        first.request.respond(200, {'content-type': 'application/json'}, '{}');
-        second.request.respond(200, {'content-type': 'application/json'}, '{}');
+        first.xhr.respond(200, {'content-type': 'application/json'}, '{}');
+        second.xhr.respond(200, {'content-type': 'application/json'}, '{}');
 
         return first.promise
             .then(() => {
@@ -59,11 +59,11 @@ describe('Method request()', () => {
     it('should handle HTTP errors correctly', function() {
         expect(this.api.opened.length).to.equal(0);
 
-        let {request, promise} = this.api.request('GET', '/');
+        let {xhr, promise} = this.api.request('GET', '/');
 
         expect(this.api.opened.length).to.equal(1);
 
-        request.respond(404, {'content-type': 'application/json'}, '{}');
+        xhr.respond(404, {'content-type': 'application/json'}, '{}');
 
         return promise.catch((data) => {
             expect(this.api.opened.length).to.equal(0);
@@ -79,8 +79,8 @@ describe('Method request()', () => {
             }
         });
 
-        let {request} = preset.request('GET', '/'),
-            {requestHeaders} = request;
+        let {xhr} = preset.request('GET', '/'),
+            {requestHeaders} = xhr;
 
         expect(requestHeaders['Content-Type']).to.equal('application/json');
         expect(requestHeaders['X-Custom-Header']).to.equal('custom');

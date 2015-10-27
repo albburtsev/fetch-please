@@ -79,7 +79,7 @@ If you want to abort individual request, you can do this with special API:
 
 	componentWillMount() {
 		// It's another API, that returns XHR object as a Promise instance
-		let {request, promise} = api.getRequest('/users/');
+		let {xhr, promise} = api.getRequest('/users/');
 
 		promise
 			.then((json) => {
@@ -90,13 +90,13 @@ If you want to abort individual request, you can do this with special API:
 			});
 
 		// Save necessary request
-		this.request = request;
+		this.xhr = xhr;
 		this.setState({loading: true});
 	},
 
 	componentWillUnmount() {
 		// Abort individual requst with saved XHR object
-		this.request.abort();
+		this.xhr.abort();
 	}
 
 // ... same part in previous example

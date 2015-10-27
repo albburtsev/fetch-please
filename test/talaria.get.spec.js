@@ -29,17 +29,17 @@ describe('Method getRequest()', () => {
         expect(this.requests.length).to.equal(0);
 
         // Create request
-        let {request, promise} = api.getRequest('users');
+        let {xhr, promise} = api.getRequest('users');
 
         // Call returns correct instances
-        expect(request).to.be.an.instanceof(XMLHttpRequest);
+        expect(xhr).to.be.an.instanceof(XMLHttpRequest);
         expect(promise).to.be.an.instanceof(Promise);
 
         // Request appears in list
         expect(this.requests.length).to.equal(1);
 
         // Fake response with header in lower case
-        request.respond(200, {'content-type': 'application/json'}, '{"a":1}');
+        xhr.respond(200, {'content-type': 'application/json'}, '{"a":1}');
 
         // Compare JSON in callback
         return promise.then((data) => {
