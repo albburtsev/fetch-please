@@ -1,24 +1,34 @@
 'use strict';
 
+import sinon from 'sinon';
 import {expect} from 'chai';
-import Talaria from '../src/talaria';
+import Talaria, {ERROR_RESOURCE_ABORTED} from '../src/talaria';
+
+let XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 
 describe('Method abort()', () => {
-    const PATH = '/api';
-    const TIMEOUT = 1000;
-    const HEADERS = {
-        Accept: 'application/json'
-    };
-
-    let api = new Talaria(PATH, {
-        timeout: TIMEOUT,
-        headers: HEADERS
+    let api = new Talaria('/api/', {
+        XMLHttpRequest: XMLHttpRequest
     });
 
-    it('has all required properties', () => {
-        expect(api).to.be.an.instanceof(Talaria);
-        expect(api.path).to.equal(PATH);
-        expect(api.timeout).to.equal(TIMEOUT);
-        expect(api.headers).to.deep.equal(HEADERS);
+    it('exists', function() {
+        expect(api.abort).to.be.a('function');
+    });
+
+    it('aborted all opened requests', function() {
+        let first = api.request('GET', '/'),
+            second = api.request('GET', '/');
+
+        expect(api.opened.length).to.equal(2);
+
+        api.abort();
+
+        return first.promise
+            .catch(second.promise)
+            .catch((error) => {
+                expect(api.opened.length).to.equal(0);
+                expect(error).to.be.an.instanceOf(Error);
+                expect(error.message).to.equal(ERROR_RESOURCE_ABORTED);
+            });
     });
 });

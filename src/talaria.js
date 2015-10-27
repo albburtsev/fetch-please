@@ -35,7 +35,6 @@ export const ERROR_RESOURCE_FAILED = 'Resource failed to load';
  * @property {XMLHttpRequest} XMLHttpRequest XHR interface
  * @property {Boolean} cors ```true``` if supported Cross-Origin Resource Sharing
  *
- * @todo: method abort
  * @todo: methods post/postRequest
  * @todo: methods put/putRequest
  * @todo: methods delete/deleteRequest
@@ -157,7 +156,9 @@ class Talaria {
      * Aborts all opened requests
      */
     abort() {
-        // @todo
+        this.opened.forEach((xhr) => {
+            xhr.abort();
+        });
     }
 
     /**
