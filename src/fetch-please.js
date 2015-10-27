@@ -230,7 +230,7 @@ class FetchPlease {
      * @param {Object} [settings]
      * @return {Promise}
      */
-    put(url, data, settings = null) {
+    put(url, data, settings) {
         let {promise} = this.putRequest(url, data, settings);
         return promise;
     }
@@ -250,11 +250,13 @@ class FetchPlease {
     /**
      * Sends DELETE request
      * @param {String} url
+     * @param {Object} [params]
      * @param {Object} [settings]
      * @return {Promise}
      */
-    delete() {
-        // @todo
+    delete(url, params, settings) {
+        let {promise} = this.deleteRequest(url, params, settings);
+        return promise;
     }
 
     /**
@@ -294,11 +296,13 @@ class FetchPlease {
     /**
      * Sends same DELETE request but returns object with instances of XHR and Promise
      * @param {String} url
+     * @param {Object} [params]
      * @param {Object} [settings]
      * @return {Object}
      */
-    deleteRequest() {
-        // @todo
+    deleteRequest(url, params = null, settings = null) {
+        url = joinParams(url, params);
+        return this.request(HTTP_METHOD_DELETE, url, null, settings);
     }
 
     /**
