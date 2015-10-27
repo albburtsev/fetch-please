@@ -2,14 +2,14 @@
 
 import sinon from 'sinon';
 import {expect} from 'chai';
-import Talaria from '../src/talaria';
+import FetchPlease from '../src/fetch-please';
 
 let XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 
 describe('Method getRequest()', () => {
     before(function() {
         this.requests = [];
-        this.api = new Talaria('/api/', {XMLHttpRequest});
+        this.api = new FetchPlease('/api/', {XMLHttpRequest});
 
         XMLHttpRequest.onCreate = (xhr) => {
             this.requests.push(xhr);
@@ -52,7 +52,7 @@ describe('Method getRequest()', () => {
 describe('Method get()', () => {
     before(function() {
         this.requests = [];
-        this.api = new Talaria('/api/', {XMLHttpRequest});
+        this.api = new FetchPlease('/api/', {XMLHttpRequest});
 
         XMLHttpRequest.onCreate = (xhr) => {
             this.requests.push(xhr);

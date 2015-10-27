@@ -2,12 +2,12 @@
 
 import sinon from 'sinon';
 import {expect} from 'chai';
-import Talaria, {ERROR_RESOURCE_ABORTED} from '../src/talaria';
+import FetchPlease, {ERROR_RESOURCE_ABORTED} from '../src/fetch-please';
 
 let XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 
 describe('Method abort()', () => {
-    let api = new Talaria('/api/', {
+    let api = new FetchPlease('/api/', {
         XMLHttpRequest: XMLHttpRequest
     });
 

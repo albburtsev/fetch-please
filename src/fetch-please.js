@@ -44,7 +44,7 @@ export const ERROR_RESOURCE_FAILED = 'Resource failed to load';
  * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
  * @see http://www.html5rocks.com/en/tutorials/cors/
  */
-class Talaria {
+class FetchPlease {
     /**
      * @param {String} path Common path for all requests
      * @param {Object} [settings] Object with settings
@@ -312,4 +312,4 @@ class Talaria {
     }
 }
 
-export default Talaria;
+export default FetchPlease;

@@ -1,28 +1,28 @@
 'use strict';
 
 import {expect} from 'chai';
-import Talaria from '../src/talaria';
+import FetchPlease from '../src/fetch-please';
 
-describe('Class Talaria', () => {
+describe('Class FetchPlease', () => {
     it('exist', () => {
-        expect(Talaria).to.be.an.instanceof(Function);
+        expect(FetchPlease).to.be.an.instanceof(Function);
     });
 });
 
-describe('Instance of Talaria', () => {
+describe('Instance of FetchPlease', () => {
     const PATH = '/api';
     const TIMEOUT = 1000;
     const HEADERS = {
         Accept: 'application/json'
     };
 
-    let api = new Talaria(PATH, {
+    let api = new FetchPlease(PATH, {
         timeout: TIMEOUT,
         headers: HEADERS
     });
 
     it('has all required properties', () => {
-        expect(api).to.be.an.instanceof(Talaria);
+        expect(api).to.be.an.instanceof(FetchPlease);
         expect(api.path).to.equal(PATH);
         expect(api.timeout).to.equal(TIMEOUT);
         expect(api.headers).to.deep.equal(HEADERS);

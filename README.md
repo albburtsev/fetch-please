@@ -1,6 +1,6 @@
-# Talaria.js
+# fetch-please.js
 
-Talaria.js — HTTP-transport that supports [Promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise) and cancelable requests (XHR). Great for React!
+HTTP-transport that supports [Promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise) and cancelable requests (XHR). Great for React!
 
 ## Justification
 
@@ -11,16 +11,16 @@ This library provides simple API with cancelable requests and XHR under the hood
 ## Install
 
 ```bash
-npm install talaria --save
+npm install fetch-please --save
 ```
 
 ## Examples
 
 ```js
 import React from 'react';
-import Talaria from 'talaria';
+import FetchPlease from 'fetch-please';
 
-let api = new Talaria('/api/', {
+let api = new FetchPlease('/api/', {
 	/* Settings here, see list of available settings below */
 });
 
@@ -66,7 +66,7 @@ let SmartComponent = React.createClass({
 	 * Application doesn't need in requested data
 	 */
 	componentWillUnmount() {
-		// Abort all opened requests for this instance of Talaria
+		// Abort all opened requests for this instance of FetchPlease
 		api.abort();
 	}
 });

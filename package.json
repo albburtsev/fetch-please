@@ -1,12 +1,12 @@
 {
-  "name": "talaria",
+  "name": "fetch-please",
   "version": "0.0.0",
   "description": "HTTP-transport that supports Promises and cancelable requests (XHR)",
-  "main": "dist/talaria.js",
+  "main": "dist/fetch-please.js",
   "scripts": {
     "grunt": "grunt",
-    "build:umd": "webpack src/talaria.js dist/talaria.js --config webpack.config.js",
-    "build:umd:min": "NODE_ENV=production webpack src/talaria.js dist/talaria.min.js --config webpack.config.js",
+    "build:umd": "webpack src/fetch-please.js dist/fetch-please.js --config webpack.config.js",
+    "build:umd:min": "NODE_ENV=production webpack src/fetch-please.js dist/fetch-please.min.js --config webpack.config.js",
     "build": "npm run build:umd && npm run build:umd:min",
     "build:watch": "npm run build:umd -- --watch",
     "prepublish": "npm run build",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/albburtsev/talaria.git"
+    "url": "git+https://github.com/albburtsev/fetch-please.git"
   },
   "keywords": [
     "fetch",
@@ -33,9 +33,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/albburtsev/talaria/issues"
+    "url": "https://github.com/albburtsev/fetch-please/issues"
   },
-  "homepage": "https://github.com/albburtsev/talaria#readme",
+  "homepage": "https://github.com/albburtsev/fetch-please#readme",
   "devDependencies": {
     "babel": "^5.8.23",
     "babel-core": "^5.8.25",

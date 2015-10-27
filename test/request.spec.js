@@ -2,16 +2,16 @@
 
 import sinon from 'sinon';
 import {expect} from 'chai';
-import Talaria, {
+import FetchPlease, {
     ERROR_XHR_NOT_FOUND, ERROR_UNKNOWN_HTTP_METHOD, ERROR_UNACCEPTABLE_HTTP_CODE,
     ERROR_RESOURCE_ABORTED, ERROR_JSON_PARSE
-} from '../src/talaria';
+} from '../src/fetch-please';
 
 let XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 
 describe('Method request()', () => {
     before(function() {
-        this.api = new Talaria('/api/', {
+        this.api = new FetchPlease('/api/', {
             XMLHttpRequest: XMLHttpRequest
         });
     });
@@ -21,7 +21,7 @@ describe('Method request()', () => {
     });
 
     it('handles missed and invalid arguments correctly', function() {
-        let broken = new Talaria('/api/');
+        let broken = new FetchPlease('/api/');
 
         expect(() => {
             broken.request();
@@ -37,7 +37,7 @@ describe('Method request()', () => {
     });
 
     it('should join paths', function() {
-        let api = new Talaria('/api/', {XMLHttpRequest: XMLHttpRequest});
+        let api = new FetchPlease('/api/', {XMLHttpRequest: XMLHttpRequest});
 
         // URLs without normilizing
         expect(api.request('GET', '/users').xhr.url).to.equal('/api//users');
@@ -45,7 +45,7 @@ describe('Method request()', () => {
     });
 
     it('should set headers', function() {
-        let preset = new Talaria('/api/', {
+        let preset = new FetchPlease('/api/', {
             XMLHttpRequest: XMLHttpRequest,
             headers: {
                 'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ describe('Method request()', () => {
     });
 
     it('should set timeout', function() {
-        let preset = new Talaria('/api/', {
+        let preset = new FetchPlease('/api/', {
             timeout: 1,
             XMLHttpRequest: XMLHttpRequest
         });

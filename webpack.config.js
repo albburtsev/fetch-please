@@ -27,7 +27,7 @@ var config = {
         ]
     },
     output: {
-        library: 'Talaria',
+        library: 'FetchPlease',
         libraryTarget: 'umd'
     },
     resolve: {
