@@ -70,6 +70,22 @@ describe('Method request()', () => {
         });
     });
 
+    it('should set headers', function() {
+        let preset = new Talaria('/api/', {
+            XMLHttpRequest: XMLHttpRequest,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Custom-Header': 'custom'
+            }
+        });
+
+        let {request} = preset.request('GET', '/'),
+            {requestHeaders} = request;
+
+        expect(requestHeaders['Content-Type']).to.equal('application/json');
+        expect(requestHeaders['X-Custom-Header']).to.equal('custom');
+    });
+
     after(function() {
         this.api = null;
     });

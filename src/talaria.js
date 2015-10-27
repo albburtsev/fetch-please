@@ -62,7 +62,7 @@ class Talaria {
      * @param {Object} settings
      * @return {Object}
      */
-    request(method, url, data) {
+    request(method, url, data = null, settings = null) {
         if (!this.XMLHttpRequest) {
             throw new Error(ERROR_XHR_NOT_FOUND);
         }
@@ -101,8 +101,17 @@ class Talaria {
                 });
             });
 
-        // Send request
+        // Open request
         request.open(method, url);
+
+        // Set headers
+        // Order of method's calls is important
+        // You must call setRequestHeader() after open(), but before send()
+        // @see: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#setRequestHeader()
+        let headers = assign({}, this.headers, settings && settings.headers);
+        this.setHeaders(request, headers);
+
+        // Send request
         request.send(data);
 
         // Add request into list of opened requests
@@ -116,6 +125,19 @@ class Talaria {
         });
 
         return {request, promise};
+    }
+
+    /**
+     * Iterates given headers and set them for XHR object
+     * @param {XMLHttpRequest} xhr
+     * @param {Object} headers
+     * @return {XMLHttpRequest}
+     */
+    setHeaders(xhr, headers = {}) {
+        return Object.keys(headers).reduce((xhr, header) => {
+            xhr.setRequestHeader(header, headers[header]);
+            return xhr;
+        }, xhr);
     }
 
     /**
@@ -230,6 +252,10 @@ class Talaria {
      * @return {Object}
      */
     deleteRequest() {
+        // @todo
+    }
+
+    handleJson() {
         // @todo
     }
 

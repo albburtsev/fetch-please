@@ -58,17 +58,5 @@ export default {
         return url +
             (url.indexOf('?') === -1 ? '?' : '&') +
             queryString;
-    },
-
-    /**
-     * Returns new object with keys in lower case ;)
-     * @param {Object} obj
-     * @return {Object}
-     */
-    toLowerKeys(obj) {
-        return Object.keys(obj).reduce((lower, key) => {
-            lower[key.toLowerCase()] = obj[key];
-            return lower;
-        }, {});
     }
 };

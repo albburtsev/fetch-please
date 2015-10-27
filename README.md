@@ -104,7 +104,9 @@ If you want to abort individual request, you can do this with special API:
 
 ## Requirements
 
-TODO
+ES5 compatible besides Promises. Use [polyfill for ES6 Promises](https://github.com/jakearchibald/es6-promise).
+
+If you need ES3 compatible version use polyfills for ```Object.keys```, ```Array.prototype.indexOf```.
 
 ## API
 
