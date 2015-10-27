@@ -19,6 +19,7 @@ export const ERROR_XHR_NOT_FOUND = 'Constructor XMLHttpRequest not found';
 export const ERROR_PROMISE_NOT_FOUND = 'Constructor Promise not found';
 export const ERROR_UNKNOWN_HTTP_METHOD = 'Unknown HTTP method';
 export const ERROR_UNACCEPTABLE_HTTP_CODE = 'Unacceptable HTTP code';
+export const ERROR_INVALID_DATA = 'Invalid data for sending';
 export const ERROR_JSON_PARSE = 'Invalid JSON';
 
 export const ERROR_CONNECTION_TIMEOUT = 'Connection timeout';
@@ -131,13 +132,43 @@ class FetchPlease {
         let timeout = this.timeout || settings.timeout || 0;
         xhr.timeout = timeout;
 
-        // Send request
+        // Serialize data and send request
+        data = this.serialize(data);
         xhr.send(data);
 
         // Add request into list of opened requests
         this.add(xhr);
 
         return {xhr, promise};
+    }
+
+    /**
+     * Serializes data for request
+     * @param {*} data
+     * @return {String|FormData|Blob}
+     */
+    serialize(data) {
+        // Do nothing with FormData instance
+        if (global.FormData && data instanceof FormData) {
+            return data;
+        }
+
+        // Do nothing with Blob instance
+        if (global.Blob && data instanceof Blob) {
+            return data;
+        }
+
+        // Do nothing with string or null
+        if (data === null || typeof data === 'string') {
+            return data;
+        }
+
+        try {
+            // Serialize other data as JSON
+            return JSON.stringify(data);
+        } catch (e) {
+            throw new Error(ERROR_INVALID_DATA);
+        }
     }
 
     /**
@@ -211,8 +242,9 @@ class FetchPlease {
      * @param {Object} [settings]
      * @return {Promise}
      */
-    post() {
-        // @todo
+    post(url, data, settings) {
+        let {promise} = this.postRequest(url, data, settings);
+        return promise;
     }
 
     /**
@@ -255,9 +287,8 @@ class FetchPlease {
      * @param {Object} [settings]
      * @return {Object}
      */
-    postRequest() {
-        // @todo
-        // @todo: don't forget about FormData
+    postRequest(url, data, settings = null) {
+        return this.request(HTTP_METHOD_POST, url, data, settings);
     }
 
     /**
