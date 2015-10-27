@@ -1,4 +1,4 @@
-# fetch-please.js
+# fetch-please.js [![Build Status](https://secure.travis-ci.org/albburtsev/fetch-please.png?branch=master)](https://travis-ci.org/albburtsev/fetch-please)
 
 HTTP-transport that supports [Promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise) and cancelable requests (XHR). Great for React!
 
