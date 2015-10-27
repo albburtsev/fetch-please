@@ -4,12 +4,12 @@
   "description": "HTTP-transport that supports Promises and cancelable requests (XHR)",
   "main": "dist/fetch-please.js",
   "scripts": {
-    "grunt": "grunt",
     "build:umd": "webpack src/fetch-please.js dist/fetch-please.js --config webpack.config.js",
     "build:umd:min": "NODE_ENV=production webpack src/fetch-please.js dist/fetch-please.min.js --config webpack.config.js",
     "build": "npm run build:umd && npm run build:umd:min",
     "build:watch": "npm run build:umd -- --watch",
     "prepublish": "npm run build",
+    "lint": "eslint src/ test/",
     "test": "mocha --compilers js:babel/register --recursive",
     "test:watch": "npm test --  --watch"
   },

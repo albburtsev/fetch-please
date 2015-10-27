@@ -36,7 +36,6 @@ export const ERROR_RESOURCE_FAILED = 'Resource failed to load';
  * @property {XMLHttpRequest} XMLHttpRequest XHR interface
  * @property {Boolean} cors ```true``` if supported Cross-Origin Resource Sharing
  *
- * @todo: methods post/postRequest
  * @todo: methods put/putRequest
  * @todo: methods delete/deleteRequest
  * @todo: cors
@@ -231,8 +230,9 @@ class FetchPlease {
      * @param {Object} [settings]
      * @return {Promise}
      */
-    put() {
-        // @todo
+    put(url, data, settings = null) {
+        let {promise} = this.putRequest(url, data, settings);
+        return promise;
     }
 
     /**
@@ -276,8 +276,8 @@ class FetchPlease {
      * @param {Object} [settings]
      * @return {Object}
      */
-    putRequest() {
-        // @todo
+    putRequest(url, data, settings = null) {
+        return this.request(HTTP_METHOD_PUT, url, data, settings);
     }
 
     /**

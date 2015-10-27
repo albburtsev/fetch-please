@@ -1,5 +1,3 @@
-'use strict';
-
 import sinon from 'sinon';
 import {expect} from 'chai';
 import FetchPlease, {ERROR_RESOURCE_ABORTED} from '../src/fetch-please';
@@ -7,9 +5,7 @@ import FetchPlease, {ERROR_RESOURCE_ABORTED} from '../src/fetch-please';
 let XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 
 describe('Method abort()', () => {
-    let api = new FetchPlease('/api/', {
-        XMLHttpRequest: XMLHttpRequest
-    });
+    let api = new FetchPlease('/api/', {XMLHttpRequest});
 
     it('exists', function() {
         expect(api.abort).to.be.a('function');

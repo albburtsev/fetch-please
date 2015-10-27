@@ -1,5 +1,3 @@
-'use strict';
-
 import sinon from 'sinon';
 import {expect} from 'chai';
 import FetchPlease, {
@@ -11,9 +9,7 @@ let XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 
 describe('Method request()', () => {
     before(function() {
-        this.api = new FetchPlease('/api/', {
-            XMLHttpRequest: XMLHttpRequest
-        });
+        this.api = new FetchPlease('/api/', {XMLHttpRequest});
     });
 
     it('exists', function() {
@@ -37,7 +33,7 @@ describe('Method request()', () => {
     });
 
     it('should join paths', function() {
-        let api = new FetchPlease('/api/', {XMLHttpRequest: XMLHttpRequest});
+        let api = new FetchPlease('/api/', {XMLHttpRequest});
 
         // URLs without normilizing
         expect(api.request('GET', '/users').xhr.url).to.equal('/api//users');
@@ -46,7 +42,7 @@ describe('Method request()', () => {
 
     it('should set headers', function() {
         let preset = new FetchPlease('/api/', {
-            XMLHttpRequest: XMLHttpRequest,
+            XMLHttpRequest,
             headers: {
                 'Content-Type': 'application/json',
                 'X-Custom-Header': 'custom'
@@ -62,8 +58,8 @@ describe('Method request()', () => {
 
     it('should set timeout', function() {
         let preset = new FetchPlease('/api/', {
-            timeout: 1,
-            XMLHttpRequest: XMLHttpRequest
+            XMLHttpRequest,
+            timeout: 1
         });
 
         expect(preset.timeout).to.equal(1);
@@ -89,7 +85,7 @@ describe('Method request()', () => {
             .then(() => {
                 return second.promise;
             })
-            .then((data) => {
+            .then(() => {
                 expect(this.api.opened.length).to.equal(0);
             });
     });

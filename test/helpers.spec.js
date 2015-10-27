@@ -1,5 +1,3 @@
-'use strict';
-
 import {expect} from 'chai';
 import {assign, joinParams} from '../src/helpers';
 
@@ -21,7 +19,8 @@ describe('Helper assign()', () => {
         let target = {},
             assigned = assign(target, {a: 1});
 
-        expect(target === assigned).to.be.ok;
+        // expect((target === assigned)).to.be.ok;
+        expect(target).to.equal(assigned);
     });
 });
 
@@ -38,6 +37,7 @@ describe('Helper joinParams()', () => {
     });
 
     it('forms URL correctly', () => {
+        /* eslint no-dupe-keys:0 */
         expect(joinParams('', {a: 1})).to.be.equal('?a=1');
         expect(joinParams('', {a: 1, b: 2})).to.be.equal('?a=1&b=2');
         expect(joinParams('', {a: 0, a: 1})).to.be.equal('?a=1');

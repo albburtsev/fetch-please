@@ -1,5 +1,3 @@
-'use strict';
-
 import sinon from 'sinon';
 import {expect} from 'chai';
 import FetchPlease from '../src/fetch-please';

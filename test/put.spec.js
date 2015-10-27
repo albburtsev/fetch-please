@@ -4,7 +4,7 @@ import FetchPlease from '../src/fetch-please';
 
 let XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 
-describe('Method postRequest()', () => {
+describe('Method putRequest()', () => {
     before(function() {
         this.requests = [];
         this.api = new FetchPlease('/api/', {XMLHttpRequest});
@@ -15,16 +15,16 @@ describe('Method postRequest()', () => {
     });
 
     it('exists', function() {
-        expect(this.api.postRequest).to.be.a('function');
+        expect(this.api.putRequest).to.be.a('function');
     });
 
     it('sends request', function() {
         expect(this.requests.length).to.equal(0);
 
-        let {xhr, promise} = this.api.postRequest('users', null);
+        let {xhr, promise} = this.api.putRequest('users', null);
 
         expect(xhr).to.be.an.instanceof(XMLHttpRequest);
-        expect(xhr.method).be.equal('POST');
+        expect(xhr.method).be.equal('PUT');
         expect(promise).to.be.an.instanceof(Promise);
         expect(this.requests.length).to.equal(1);
 
@@ -35,20 +35,6 @@ describe('Method postRequest()', () => {
         });
     });
 
-    it('sends request with string', function() {
-        let {xhr} = this.api.postRequest('users', 'Hello');
-        expect(xhr.requestBody).be.equal('Hello');
-    });
-
-    it('sends request with JSON', function() {
-        let {xhr} = this.api.postRequest('users', {
-            name: 'Mary',
-            sirname: 'Brown'
-        });
-
-        expect(xhr.requestBody).be.equal('{"name":"Mary","sirname":"Brown"}');
-    });
-
     after(function() {
         this.api = null;
         this.requests = [];
@@ -56,7 +42,7 @@ describe('Method postRequest()', () => {
     });
 });
 
-describe('Method post()', () => {
+describe('Method put()', () => {
     before(function() {
         this.requests = [];
         this.api = new FetchPlease('/api/', {XMLHttpRequest});
@@ -67,13 +53,13 @@ describe('Method post()', () => {
     });
 
     it('exists', function() {
-        expect(this.api.post).to.be.a('function');
+        expect(this.api.put).to.be.a('function');
     });
 
     it('sends request', function() {
         expect(this.requests.length).to.equal(0);
 
-        let promise = this.api.post('users', null);
+        let promise = this.api.put('users', null);
 
         expect(promise).to.be.an.instanceof(Promise);
         expect(this.requests.length).to.equal(1);
