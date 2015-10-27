@@ -11,9 +11,19 @@ export const ALLOWED_METHODS = [
     HTTP_METHOD_DELETE
 ];
 
+export const CONTENT_TYPE_JSON = 'application/json';
+export const MIN_SUCCESSFUL_HTTP_CODE = 200;
+export const MAX_SUCCESSFUL_HTTP_CODE = 299;
+
 export const ERROR_XHR_NOT_FOUND = 'Constructor XMLHttpRequest not found';
 export const ERROR_PROMISE_NOT_FOUND = 'Constructor Promise not found';
 export const ERROR_UNKNOWN_HTTP_METHOD = 'Unknown HTTP method';
+export const ERROR_UNACCEPTABLE_HTTP_CODE = 'Unacceptable HTTP code';
+export const ERROR_JSON_PARSE = 'Invalid JSON';
+
+export const ERROR_CONNECTION_TIMEOUT = 'Connection timeout';
+export const ERROR_RESOURCE_ABORTED = 'Resource has been aborted';
+export const ERROR_RESOURCE_FAILED = 'Resource failed to load';
 
 /**
  * @class
@@ -25,7 +35,6 @@ export const ERROR_UNKNOWN_HTTP_METHOD = 'Unknown HTTP method';
  * @property {XMLHttpRequest} XMLHttpRequest XHR interface
  * @property {Boolean} cors ```true``` if supported Cross-Origin Resource Sharing
  *
- * @todo: pipe for handling response: handleResponse | handleJson
  * @todo: method abort
  * @todo: methods post/postRequest
  * @todo: methods put/putRequest
@@ -82,33 +91,36 @@ class Talaria {
             throw new Error(ERROR_UNKNOWN_HTTP_METHOD);
         }
 
-        let _handle = this.handleResponse,
-            xhr = new this.XMLHttpRequest(),
+        let xhr = new this.XMLHttpRequest(),
             promise = new Promise(function (resolve, reject) {
                 xhr.addEventListener('load', function() {
-                    let {error, payload} = _handle(this);
-
-                    if (error) {
-                        reject(new Error(this));
-                    } else {
-                        resolve(payload);
-                    }
+                    resolve(this);
                 });
 
                 xhr.addEventListener('error', function() {
-                    reject(new Error(this));
+                    reject(ERROR_RESOURCE_FAILED);
                 });
 
                 xhr.addEventListener('abort', function() {
-                    reject(new Error(this));
+                    reject(ERROR_RESOURCE_ABORTED);
                 });
 
                 xhr.addEventListener('timeout', function() {
-                    reject(new Error(this));
+                    reject(ERROR_CONNECTION_TIMEOUT);
                 });
             });
 
         settings = settings || {};
+        promise = promise
+            // Remove request from list of opened requests
+            .then(
+                () => this.close(xhr),
+                () => this.close(xhr)
+            )
+            // Handle response
+            .then(this.handleResponse)
+            // Handle JSON in response
+            .then(this.handleJson);
 
         // Open request
         xhr.open(method, url);
@@ -130,13 +142,6 @@ class Talaria {
 
         // Add request into list of opened requests
         this.add(xhr);
-
-        // Handle removing request from list of opened requests
-        promise.then(() => {
-            this.close(xhr);
-        }, () => {
-            this.close(xhr);
-        });
 
         return {xhr, promise};
     }
@@ -172,12 +177,14 @@ class Talaria {
     /**
      * Deletes request from list of opened requests
      * @param {XMLHttpRequest} xhr
+     * @return {XMLHtpRequest}
      */
     close(xhr) {
         let idx = this.opened.indexOf(xhr);
         if (idx !== -1) {
             this.opened.splice(idx, 1);
         }
+        return xhr;
     }
 
     /**
@@ -269,47 +276,45 @@ class Talaria {
         // @todo
     }
 
-    handleJson() {
-        // @todo
+    /**
+     * Handles JSON in response
+     * @param {XMLHttpRequest} xhr
+     * @param {String} xhr.responseText
+     * @return {Object}
+     */
+    handleJson(xhr) {
+        let {responseText} = xhr,
+            contentType = xhr.getResponseHeader('Content-Type') || '';
+
+        contentType = contentType.toLowerCase();
+
+        // If header Content-Type has value "application/json" then parse text as JSON
+        if (contentType.indexOf(CONTENT_TYPE_JSON) !== -1) {
+            try {
+                return JSON.parse(responseText);
+            } catch (e) {
+                throw new Error(ERROR_JSON_PARSE);
+            }
+        }
     }
 
     /**
      * Handles XHR response
      * @param {XMLHttpRequest} xhr
-     * @param {String} xhr.status
-     * @param {String} xhr.responseText
+     * @param {Number} xhr.status
      * @see https://xhr.spec.whatwg.org/#interface-xmlhttprequest
-     * @return {Object}
+     * @return {XMLHttpRequest}
      */
     handleResponse(xhr) {
-        const MIN_SUCCESS_CODE = 200;
-        const MAX_SUCCESS_CODE = 299;
-        const CONTENT_TYPE_JSON_VALUE = 'application/json';
-
-        let {status, responseText} = xhr;
+        let {status} = xhr;
 
         // If status < 200 or status >= 200 then return error
-        if (status < MIN_SUCCESS_CODE || status > MAX_SUCCESS_CODE) {
-            return {error: true};
+        if (status < MIN_SUCCESSFUL_HTTP_CODE || status > MAX_SUCCESSFUL_HTTP_CODE) {
+            throw new Error(ERROR_UNACCEPTABLE_HTTP_CODE);
         }
 
-        // If header Content-Type has value "application/json" then parse text as JSON
-        let contentType = xhr.getResponseHeader('Content-Type');
-        if (contentType) {
-            contentType = contentType.toLowerCase();
-
-            if (contentType.indexOf(CONTENT_TYPE_JSON_VALUE) !== -1) {
-                try {
-                    let data = JSON.parse(responseText);
-                    return {payload: data};
-                } catch (e) {
-                    return {error: true};
-                }
-            }
-        }
-
-        // Just return given text
-        return {payload: responseText};
+        // Just return given xhr
+        return xhr;
     }
 }
 
