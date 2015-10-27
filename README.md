@@ -38,7 +38,7 @@ let SmartComponent = React.createClass({
 	 */
 	componentWillMount() {
 		api
-			.get('/users/', {
+			.get('users/', {
 				limit: 20,
 				offset: 10
 			})
@@ -79,7 +79,7 @@ If you want to abort individual request, you can do this with special API:
 
 	componentWillMount() {
 		// It's another API, that returns XHR object as a Promise instance
-		let {xhr, promise} = api.getRequest('/users/');
+		let {xhr, promise} = api.getRequest('users/');
 
 		promise
 			.then((json) => {
