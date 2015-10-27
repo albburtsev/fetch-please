@@ -93,30 +93,24 @@ class Talaria {
 
         let xhr = new this.XMLHttpRequest(),
             promise = new Promise(function (resolve, reject) {
-                xhr.addEventListener('load', function() {
-                    resolve(this);
-                });
-
-                xhr.addEventListener('error', function() {
-                    reject(ERROR_RESOURCE_FAILED);
-                });
-
-                xhr.addEventListener('abort', function() {
-                    reject(ERROR_RESOURCE_ABORTED);
-                });
-
-                xhr.addEventListener('timeout', function() {
-                    reject(ERROR_CONNECTION_TIMEOUT);
+                xhr.addEventListener('error', () => reject(ERROR_RESOURCE_FAILED));
+                xhr.addEventListener('abort', () => reject(ERROR_RESOURCE_ABORTED));
+                xhr.addEventListener('timeout', () => reject(ERROR_CONNECTION_TIMEOUT));
+                xhr.addEventListener('load', () => {
+                    if (xhr.status) {
+                        resolve(xhr);
+                    }
                 });
             });
 
         settings = settings || {};
         promise = promise
             // Remove request from list of opened requests
-            .then(
-                () => this.close(xhr),
-                () => this.close(xhr)
-            )
+            .then(() => this.close(xhr))
+            .catch((error) => {
+                this.close(xhr);
+                throw new Error(error);
+            })
             // Handle response
             .then(this.handleResponse)
             // Handle JSON in response

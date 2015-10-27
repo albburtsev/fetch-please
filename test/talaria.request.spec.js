@@ -2,7 +2,10 @@
 
 import sinon from 'sinon';
 import {expect} from 'chai';
-import Talaria, {ERROR_XHR_NOT_FOUND, ERROR_UNKNOWN_HTTP_METHOD} from '../src/talaria';
+import Talaria, {
+    ERROR_XHR_NOT_FOUND, ERROR_UNKNOWN_HTTP_METHOD, ERROR_UNACCEPTABLE_HTTP_CODE,
+    ERROR_RESOURCE_ABORTED, ERROR_JSON_PARSE
+} from '../src/talaria';
 
 let XMLHttpRequest = sinon.useFakeXMLHttpRequest();
 
@@ -37,11 +40,9 @@ describe('Method request()', () => {
         expect(this.api.opened.length).to.equal(0);
 
         let first = this.api.request('GET', '/');
-
         expect(this.api.opened.length).to.equal(1);
 
         let second = this.api.request('GET', '/');
-
         expect(this.api.opened.length).to.equal(2);
 
         first.xhr.respond(200, {'content-type': 'application/json'}, '{}');
@@ -54,20 +55,6 @@ describe('Method request()', () => {
             .then((data) => {
                 expect(this.api.opened.length).to.equal(0);
             });
-    });
-
-    it('should handle HTTP errors correctly', function() {
-        expect(this.api.opened.length).to.equal(0);
-
-        let {xhr, promise} = this.api.request('GET', '/');
-
-        expect(this.api.opened.length).to.equal(1);
-
-        xhr.respond(404, {'content-type': 'application/json'}, '{}');
-
-        return promise.catch((data) => {
-            expect(this.api.opened.length).to.equal(0);
-        });
     });
 
     it('should set headers', function() {
@@ -97,6 +84,39 @@ describe('Method request()', () => {
         let {xhr} = preset.request('GET', '/');
 
         expect(xhr.timeout).to.equal(1);
+    });
+
+    it('should handle unacceptable HTTP code', function() {
+        let {xhr, promise} = this.api.request('GET', '/');
+
+        expect(this.api.opened.length).to.equal(1);
+        xhr.respond(404, {'content-type': 'application/json'}, '{}');
+
+        return promise.catch((error) => {
+            expect(this.api.opened.length).to.equal(0);
+            expect(error).to.be.an.instanceOf(Error);
+            expect(error.message).to.equal(ERROR_UNACCEPTABLE_HTTP_CODE);
+        });
+    });
+
+    it('should handle invalid JSON', function() {
+        let {xhr, promise} = this.api.request('GET', '/');
+        xhr.respond(200, {'content-type': 'application/json'}, '{blah}');
+
+        return promise.catch((error) => {
+            expect(error).to.be.an.instanceOf(Error);
+            expect(error.message).to.equal(ERROR_JSON_PARSE);
+        });
+    });
+
+    it('should handle abort', function() {
+        let {xhr, promise} = this.api.request('GET', '/');
+        xhr.abort();
+
+        return promise.catch((error) => {
+            expect(error).to.be.an.instanceOf(Error);
+            expect(error.message).to.equal(ERROR_RESOURCE_ABORTED);
+        });
     });
 
     after(function() {
