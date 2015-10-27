@@ -37,10 +37,8 @@ describe('Helper joinParams()', () => {
     });
 
     it('forms URL correctly', () => {
-        /* eslint no-dupe-keys:0 */
         expect(joinParams('', {a: 1})).to.be.equal('?a=1');
         expect(joinParams('', {a: 1, b: 2})).to.be.equal('?a=1&b=2');
-        expect(joinParams('', {a: 0, a: 1})).to.be.equal('?a=1');
         expect(joinParams('/?a=1', {b: 2})).to.be.equal('/?a=1&b=2');
         expect(joinParams('/?', {a: 1})).to.be.equal('/?a=1');
     });
