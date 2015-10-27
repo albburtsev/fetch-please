@@ -86,6 +86,19 @@ describe('Method request()', () => {
         expect(requestHeaders['X-Custom-Header']).to.equal('custom');
     });
 
+    it('should set timeout', function() {
+        let preset = new Talaria('/api/', {
+            timeout: 1,
+            XMLHttpRequest: XMLHttpRequest
+        });
+
+        expect(preset.timeout).to.equal(1);
+
+        let {xhr} = preset.request('GET', '/');
+
+        expect(xhr.timeout).to.equal(1);
+    });
+
     after(function() {
         this.api = null;
     });

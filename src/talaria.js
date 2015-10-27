@@ -25,7 +25,6 @@ export const ERROR_UNKNOWN_HTTP_METHOD = 'Unknown HTTP method';
  * @property {XMLHttpRequest} XMLHttpRequest XHR interface
  * @property {Boolean} cors ```true``` if supported Cross-Origin Resource Sharing
  *
- * @todo: timeout
  * @todo: pipe for handling response: handleResponse | handleJson
  * @todo: method abort
  * @todo: methods post/postRequest
@@ -109,6 +108,8 @@ class Talaria {
                 });
             });
 
+        settings = settings || {};
+
         // Open request
         xhr.open(method, url);
 
@@ -116,8 +117,13 @@ class Talaria {
         // Order of method's calls is important
         // You must call setRequestHeader() after open(), but before send()
         // @see: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#setRequestHeader()
-        let headers = assign({}, this.headers, settings && settings.headers);
+        let headers = assign({}, this.headers, settings.headers);
         this.setHeaders(xhr, headers);
+
+        // Set timeout (before send() too)
+        // @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Synchronous_and_Asynchronous_Requests#Example_using_a_timeout
+        let timeout = this.timeout || settings.timeout || 0;
+        xhr.timeout = timeout;
 
         // Send request
         xhr.send(data);
