@@ -1,0 +1,7 @@
+/.eslintrc
+/.npmignore
+/.gitignore
+/.travis.yml
+/webpack.*
+/fetch-please.sublime-project
+/test/
