@@ -1,3 +1,7 @@
+### 2015-10-28 v0.0.2
+
+ * Fixes wrong publushing, adds ```dist/``` folder into release
+
 ### 2015-10-27 v0.0.1
 
 First release.

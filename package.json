@@ -1,6 +1,6 @@
 {
   "name": "fetch-please",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "HTTP-transport that supports Promises and cancelable requests (XHR)",
   "main": "dist/fetch-please.js",
   "scripts": {
