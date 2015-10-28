@@ -103,19 +103,24 @@ class FetchPlease {
         settings = settings || {};
 
         let handleJson = settings.handleJson || this.handleJson,
+            handleError = settings.handleError || this.handleError,
             handleResponse = settings.handleResponse || this.handleResponse;
 
         promise = promise
             // Remove request from list of opened requests
-            .then(() => this.close(xhr))
-            .catch((error) => {
-                this.close(xhr);
-                throw new Error(error);
-            })
+            .then(
+                () => this.close(xhr),
+                (reason) => {
+                    this.close(xhr);
+                    throw new Error(reason);
+                }
+            )
             // Handle response
             .then(handleResponse)
             // Handle JSON in response
-            .then(handleJson);
+            .then(handleJson)
+            // handle errors
+            .catch(handleError);
 
         // Form URL without normalizing and open request
         let url = this.path + path;
@@ -346,6 +351,16 @@ class FetchPlease {
 
         // Just return given xhr
         return xhr;
+    }
+
+    /**
+     * Handles any occured errors
+     * @param {Error} error
+     * @return {Error}
+     */
+    handleError(error) {
+        // Really do nothing
+        throw new Error(error.message);
     }
 }
 
