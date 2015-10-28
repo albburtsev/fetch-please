@@ -36,7 +36,10 @@ export default {
         }
 
         let queryString = Object.keys(params)
-            .filter((key) => key && params[key])
+            .filter((key) => {
+                let value = params[key];
+                return value !== false && value !== null && value !== undefined;
+            })
             .map((key) => {
                 let value = params[key].toString();
 

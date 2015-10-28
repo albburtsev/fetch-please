@@ -41,6 +41,12 @@ describe('Helper joinParams()', () => {
         expect(joinParams('', {a: 1, b: 2})).to.be.equal('?a=1&b=2');
         expect(joinParams('/?a=1', {b: 2})).to.be.equal('/?a=1&b=2');
         expect(joinParams('/?', {a: 1})).to.be.equal('/?a=1');
+
+        expect(joinParams('/', {})).to.be.equal('/');
+        expect(joinParams('/', {a: 0})).to.be.equal('/?a=0');
+        expect(joinParams('/', {a: null})).to.be.equal('/');
+        expect(joinParams('/', {a: false})).to.be.equal('/');
+        expect(joinParams('/', {a: undefined})).to.be.equal('/');
     });
 
     it('decodes parameters correctly', () => {
