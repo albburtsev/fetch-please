@@ -45,7 +45,31 @@ describe('Method request()', () => {
             XMLHttpRequest,
             headers: {
                 'Content-Type': 'application/json',
-                'X-Custom-Header': 'custom'
+                'X-Custom-Header': 'custom',
+                'X-Undefined-Header': undefined,
+                'X-Falsy-Header': false,
+                'X-Null-Header': null
+            }
+        });
+
+        let {xhr} = preset.request('GET', '/'),
+            {requestHeaders} = xhr;
+
+        expect(requestHeaders['Content-Type']).to.equal('application/json');
+        expect(requestHeaders['X-Custom-Header']).to.equal('custom');
+        expect('X-Undefined-Header' in requestHeaders).to.be.false;
+        expect('X-Falsy-Header' in requestHeaders).to.be.false;
+        expect('X-Null-Header' in requestHeaders).to.be.false;
+    });
+
+    it('should set headers from callback', function() {
+        let preset = new FetchPlease('/api/', {
+            XMLHttpRequest,
+            headers: () => {
+                return {
+                    'Content-Type': 'application/json',
+                    'X-Custom-Header': 'custom'
+                }
             }
         });
 

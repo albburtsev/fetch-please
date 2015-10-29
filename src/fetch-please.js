@@ -27,18 +27,14 @@ export const ERROR_RESOURCE_ABORTED = 'Resource has been aborted';
 export const ERROR_RESOURCE_FAILED = 'Resource failed to load';
 
 /**
- * @class
- * HTTP-transport based on XHR
+ * @todo: cors
+ * @class HTTP-transport based on XHR
  * @property {String} path Common path
  * @property {Number} timeout Timeout (in milliseconds)
  * @property {Object} headers Common headers
  * @property {Array} opened List of opened requests
  * @property {XMLHttpRequest} XMLHttpRequest XHR interface
  * @property {Boolean} cors ```true``` if supported Cross-Origin Resource Sharing
- *
- * @todo: callback for headers in constructor
- * @todo: cors
- *
  * @see https://xhr.spec.whatwg.org/
  * @see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
  * @see http://www.html5rocks.com/en/tutorials/cors/
@@ -119,7 +115,7 @@ class FetchPlease {
             .then(handleResponse)
             // Handle JSON in response
             .then(handleJson)
-            // handle errors
+            // Handle errors
             .catch(handleError);
 
         // Form URL without normalizing and open request
@@ -130,7 +126,11 @@ class FetchPlease {
         // Order of method's calls is important
         // You must call setRequestHeader() after open(), but before send()
         // @see: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#setRequestHeader()
-        let headers = assign({}, this.headers, settings.headers);
+        let headers = assign(
+            {},
+            typeof this.headers === 'function' ? this.headers() : this.headers,
+            settings.headers
+        );
         this.setHeaders(xhr, headers);
 
         // Set timeout (before send() too)
@@ -185,7 +185,12 @@ class FetchPlease {
      */
     setHeaders(xhr, headers = {}) {
         return Object.keys(headers).reduce((xhr, header) => {
-            xhr.setRequestHeader(header, headers[header]);
+            let value = headers[header];
+
+            if (value !== false && value !== null && value !== undefined) {
+                xhr.setRequestHeader(header, value);
+            }
+
             return xhr;
         }, xhr);
     }
