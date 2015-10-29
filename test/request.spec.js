@@ -93,6 +93,17 @@ describe('Method request()', () => {
         expect(xhr.timeout).to.equal(1);
     });
 
+    it('should handle response without JSON', function() {
+        let {xhr, promise} = this.api.request('GET', '/');
+
+        xhr.respond(200, {'Content-Type': 'text/html'}, '<h1>Hi!</h1>');
+
+        return promise
+            .then((xhr) => {
+                expect(xhr.responseText).to.equal('<h1>Hi!</h1>');
+            });
+    });
+
     it('should change number of opened requests', function() {
         expect(this.api.opened.length).to.equal(0);
 

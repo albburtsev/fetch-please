@@ -337,6 +337,9 @@ class FetchPlease {
                 throw new Error(ERROR_JSON_PARSE);
             }
         }
+
+        // Just return given xhr
+        return xhr;
     }
 
     /**
