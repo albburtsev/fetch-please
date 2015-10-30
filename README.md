@@ -2,6 +2,8 @@
 
 HTTP-transport that supports [Promises](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise) and cancelable requests (XHR). Great for React!
 
+Moreover it's extra small (minified+gzipped less than 2.5Kb).
+
 ## Justification
 
 Handling requests with promises is really easy and convenient. But if you need to abort your request you can't do it with [fetch](https://fetch.spec.whatwg.org/). [Promises doesn't cancelable](https://esdiscuss.org/topic/cancelable-promises) outside of the constructor.

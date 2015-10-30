@@ -1,3 +1,9 @@
+### 2015-10-30 v0.1.0
+
+ * Adds ability to set headers thru the callback, which will be called per each request
+ * Bugfix: correct pipeline for non-JSON response
+ * Bugfix: zero value can be set for GET parameter
+
 ### 2015-10-28 v0.0.2
 
  * Fixes wrong publushing, adds ```dist/``` folder into release
