@@ -354,7 +354,9 @@ class FetchPlease {
 
         // If status < 200 or status >= 200 then return error
         if (status < MIN_SUCCESSFUL_HTTP_CODE || status > MAX_SUCCESSFUL_HTTP_CODE) {
-            throw new Error(ERROR_UNACCEPTABLE_HTTP_CODE);
+            let error = new Error(ERROR_UNACCEPTABLE_HTTP_CODE);
+            error.statusCode = status;
+            throw error;
         }
 
         // Just return given xhr
@@ -368,7 +370,7 @@ class FetchPlease {
      */
     handleError(error) {
         // Really do nothing
-        throw new Error(error.message);
+        throw error;
     }
 }
 

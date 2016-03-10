@@ -135,6 +135,7 @@ describe('Method request()', () => {
             expect(this.api.opened.length).to.equal(0);
             expect(error).to.be.an.instanceOf(Error);
             expect(error.message).to.equal(ERROR_UNACCEPTABLE_HTTP_CODE);
+            expect(error.statusCode).to.equal(404);
         });
     });
 
