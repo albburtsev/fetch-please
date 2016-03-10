@@ -1,3 +1,7 @@
+### 2015-03-10 v0.1.1
+
+ * HTTP status in thrown error
+
 ### 2015-10-30 v0.1.0
 
  * Adds ability to set headers thru the callback, which will be called per each request
