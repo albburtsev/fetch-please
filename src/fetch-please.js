@@ -27,7 +27,6 @@ export const ERROR_RESOURCE_ABORTED = 'Resource has been aborted';
 export const ERROR_RESOURCE_FAILED = 'Resource failed to load';
 
 /**
- * @todo: cors
  * @class HTTP-transport based on XHR
  * @property {String} path Common path
  * @property {Number} timeout Timeout (in milliseconds)
@@ -59,7 +58,7 @@ class FetchPlease {
 
         let {XMLHttpRequest} = this;
         if (XMLHttpRequest) {
-            this.cors = 'withCredentials' in (new XMLHttpRequest());
+            this.cors = 'withCredentials' in (new XMLHttpRequest()) && settings.cors;
         }
     }
 
@@ -145,6 +144,11 @@ class FetchPlease {
 
         // Serialize data and send request
         data = this.serialize(data);
+        
+        if (this.cors) {
+            xhr.withCredentials = true;
+        }
+        
         xhr.send(data);
 
         // Add request into list of opened requests
