@@ -1,3 +1,7 @@
+### 2016-10-09 v0.2.0
+
+ * Don't ignore GET parameters with `false` value [#2](https://github.com/albburtsev/fetch-please/issues/2)
+
 ### 2015-03-10 v0.1.1
 
  * HTTP status in thrown error
