@@ -55,6 +55,7 @@ describe('Method request()', () => {
         let {xhr} = preset.request('GET', '/'),
             {requestHeaders} = xhr;
 
+        /* eslint no-unused-expressions:0 */
         expect(requestHeaders['Content-Type']).to.equal('application/json');
         expect(requestHeaders['X-Custom-Header']).to.equal('custom');
         expect('X-Undefined-Header' in requestHeaders).to.be.false;
@@ -69,7 +70,7 @@ describe('Method request()', () => {
                 return {
                     'Content-Type': 'application/json',
                     'X-Custom-Header': 'custom'
-                }
+                };
             }
         });
 
