@@ -55,7 +55,7 @@ class FetchPlease {
         assign(this, {
             timeout: 0,
             headers: {},
-            cors: false
+            cors: false,
             XMLHttpRequest: global.XMLHttpRequest
         }, settings);
 
@@ -147,11 +147,11 @@ class FetchPlease {
 
         // Serialize data and send request
         data = this.serialize(data);
-        
+
         if (this.cors) {
             xhr.withCredentials = true;
         }
-        
+
         xhr.send(data);
 
         // Add request into list of opened requests
