@@ -1,3 +1,7 @@
+### 2016-10-22 v0.3.0
+
+ * Implemeted support of `progress` event [#7](https://github.com/albburtsev/fetch-please/issues/7)
+
 ### 2016-10-09 v0.2.0
 
  * Don't ignore GET parameters with `false` value [#2](https://github.com/albburtsev/fetch-please/issues/2)
