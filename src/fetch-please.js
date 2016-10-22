@@ -118,6 +118,11 @@ class FetchPlease {
             // Handle errors
             .catch(handleError);
 
+        // Add optinal `onProgress` handler
+        if (settings.onProgress) {
+            xhr.addEventListener('progress', settings.onProgress);
+        }
+
         // Form URL without normalizing and open request
         let url = this.path + path;
         xhr.open(method, url);

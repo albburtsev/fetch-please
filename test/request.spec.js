@@ -160,6 +160,16 @@ describe('Method request()', () => {
         });
     });
 
+    it('should handle progress', function() {
+        function onProgress() {
+            // Do nothing
+        }
+
+        let {xhr} = this.api.request('GET', '/', null, {onProgress});
+
+        expect(xhr.eventListeners.progress[0]).to.equal(onProgress);
+    });
+
     after(function() {
         this.api = null;
     });
