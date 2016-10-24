@@ -1,4 +1,8 @@
-### 2016-10-22 v0.3.0
+### 2016-10-22 v0.4.0
+
+ * Implemented CORS (xhr.withCredentials) [#8](https://github.com/albburtsev/fetch-please/pull/8)
+
+### 2016-10-24 v0.3.0
 
  * Implemeted support of `progress` event [#7](https://github.com/albburtsev/fetch-please/issues/7)
 
