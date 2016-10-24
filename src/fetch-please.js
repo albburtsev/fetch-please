@@ -27,12 +27,12 @@ export const ERROR_RESOURCE_ABORTED = 'Resource has been aborted';
 export const ERROR_RESOURCE_FAILED = 'Resource failed to load';
 
 /**
- * @todo: cors
  * @class HTTP-transport based on XHR
  * @property {String} path Common path
  * @property {Number} timeout Timeout (in milliseconds)
  * @property {Object} headers Common headers
  * @property {Array} opened List of opened requests
+ * @property {Boolean} cors  Use `withCredentials`
  * @property {XMLHttpRequest} XMLHttpRequest XHR interface
  * @property {Boolean} cors ```true``` if supported Cross-Origin Resource Sharing
  * @see https://xhr.spec.whatwg.org/
@@ -45,6 +45,7 @@ class FetchPlease {
      * @param {Object} [settings] Object with settings
      * @param {Number} [settings.timeout = 0]
      * @param {Object} [settings.XMLHttpRequest = global.XMLHttpRequest]
+     * @param {Object} [settings.cors = false]
      * @param {Object|Function} [settings.headers = {}]
      */
     constructor(path = '', settings = {}) {
@@ -54,12 +55,13 @@ class FetchPlease {
         assign(this, {
             timeout: 0,
             headers: {},
+            cors: false,
             XMLHttpRequest: global.XMLHttpRequest
         }, settings);
 
         let {XMLHttpRequest} = this;
         if (XMLHttpRequest) {
-            this.cors = 'withCredentials' in (new XMLHttpRequest());
+            this.cors = 'withCredentials' in (new XMLHttpRequest()) && settings.cors;
         }
     }
 
@@ -145,6 +147,11 @@ class FetchPlease {
 
         // Serialize data and send request
         data = this.serialize(data);
+
+        if (this.cors) {
+            xhr.withCredentials = true;
+        }
+
         xhr.send(data);
 
         // Add request into list of opened requests
