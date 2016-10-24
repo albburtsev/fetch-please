@@ -1,4 +1,4 @@
-### 2016-10-22 v0.4.0
+### 2016-10-22 v0.4.1
 
  * Implemented CORS (xhr.withCredentials) [#8](https://github.com/albburtsev/fetch-please/pull/8)
 
