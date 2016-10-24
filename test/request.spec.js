@@ -170,6 +170,16 @@ describe('Method request()', () => {
         expect(xhr.eventListeners.progress[0]).to.equal(onProgress);
     });
 
+    it('should handle progress upload', function() {
+        function onProgressUpload() {
+            // Do nothing
+        }
+
+        let {xhr} = this.api.request('GET', '/', null, {onProgressUpload});
+
+        expect(xhr.upload.eventListeners.progress[0]).to.equal(onProgressUpload);
+    });
+
     after(function() {
         this.api = null;
     });

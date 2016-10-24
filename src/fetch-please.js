@@ -46,6 +46,8 @@ class FetchPlease {
      * @param {Number} [settings.timeout = 0]
      * @param {Object} [settings.XMLHttpRequest = global.XMLHttpRequest]
      * @param {Object} [settings.cors = false]
+     * @param {Function} [settings.onProgress] Handler for xhr.onprogress
+     * @param {Function} [settings.onProgressUpload] Handler for xhr.upload.onprogress
      * @param {Object|Function} [settings.headers = {}]
      */
     constructor(path = '', settings = {}) {
@@ -61,7 +63,7 @@ class FetchPlease {
 
         let {XMLHttpRequest} = this;
         if (XMLHttpRequest) {
-            this.cors = 'withCredentials' in (new XMLHttpRequest()) && settings.cors;
+            this.cors = settings.cors && 'withCredentials' in (new XMLHttpRequest());
         }
     }
 
@@ -123,6 +125,11 @@ class FetchPlease {
         // Add optinal `onProgress` handler
         if (settings.onProgress) {
             xhr.addEventListener('progress', settings.onProgress);
+        }
+
+        // Add optinal `onProgressUpload` handler
+        if (settings.onProgressUpload) {
+            xhr.upload.addEventListener('progress', settings.onProgressUpload);
         }
 
         // Form URL without normalizing and open request
