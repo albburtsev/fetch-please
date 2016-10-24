@@ -125,6 +125,11 @@ class FetchPlease {
             xhr.addEventListener('progress', settings.onProgress);
         }
 
+        // Add optinal `onProgressUpload` handler
+        if (settings.onProgressUpload) {
+            xhr.upload.addEventListener('progress', settings.onProgressUpload);
+        }
+
         // Form URL without normalizing and open request
         let url = this.path + path;
         xhr.open(method, url);

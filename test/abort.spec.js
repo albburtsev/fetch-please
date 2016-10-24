@@ -20,7 +20,7 @@ describe('Method abort()', () => {
         api.abort();
 
         return first.promise
-            .catch(second.promise)
+            .catch(() => second.promise)
             .catch((error) => {
                 expect(api.opened.length).to.equal(0);
                 expect(error).to.be.an.instanceOf(Error);
