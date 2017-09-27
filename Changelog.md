@@ -1,3 +1,7 @@
+### 2017-09-27 v0.4.3
+
+ * Updated `babel-preset-es2015` to `babel-preset-env`
+
 ### 2016-10-24 v0.4.2
 
  * Implemeted support of `upload.progress` event
