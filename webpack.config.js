@@ -1,27 +1,25 @@
 'use strict';
 
-var _ = require('lodash'),
-    webpack = require('webpack'),
-    project = require('./package.json'),
-    banner = _.template(
-        '<%= name %> v<%= version %>\n' +
-        '<%= description %>\n' +
-        '@author <%= author.name %>, <%= author.url %>'
-    )(project);
+const webpack = require('webpack');
+const {name, version, description, author} = require('./package.json');
+const banner = [
+    `${name} v${version}`,
+    description,
+    `@author ${author.name}, ${author.url}`
+].join('\n')
 
-var config = {
+module.exports = {
     module: {
-        preLoaders: [
+        rules: [
             {
                 test: /\.js$/,
-                loader: 'eslint',
+                loader: 'eslint-loader',
+                enforce: 'pre',
                 exclude: /node_modules/
-            }
-        ],
-        loaders: [
+            },
             {
                 test: /\.js$/,
-                loader: 'babel',
+                loader: 'babel-loader',
                 exclude: /node_modules/
             }
         ]
@@ -31,21 +29,9 @@ var config = {
         libraryTarget: 'umd'
     },
     resolve: {
-        extensions: ['', '.js']
+        extensions: ['.js']
     },
     plugins: [
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.BannerPlugin(banner)
+        new webpack.BannerPlugin({banner})
     ]
 };
-
-if (process.env.NODE_ENV === 'production') {
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-        compressor: {
-            screw_ie8: true,
-            warnings: false
-        }
-    }));
-}
-
-module.exports = config;
