@@ -56,7 +56,7 @@ describe('Method request()', () => {
             {requestHeaders} = xhr;
 
         /* eslint no-unused-expressions:0 */
-        expect(requestHeaders['Content-Type']).to.equal('application/json');
+        expect(requestHeaders['Content-Type']).to.equal('application/json;charset=utf-8');
         expect(requestHeaders['X-Custom-Header']).to.equal('custom');
         expect('X-Undefined-Header' in requestHeaders).to.be.false;
         expect('X-Falsy-Header' in requestHeaders).to.be.false;
@@ -77,7 +77,7 @@ describe('Method request()', () => {
         let {xhr} = preset.request('GET', '/'),
             {requestHeaders} = xhr;
 
-        expect(requestHeaders['Content-Type']).to.equal('application/json');
+        expect(requestHeaders['Content-Type']).to.equal('application/json;charset=utf-8');
         expect(requestHeaders['X-Custom-Header']).to.equal('custom');
     });
 
@@ -167,7 +167,7 @@ describe('Method request()', () => {
 
         let {xhr} = this.api.request('GET', '/', null, {onProgress});
 
-        expect(xhr.eventListeners.progress[0]).to.equal(onProgress);
+        expect(xhr.eventListeners.progress).to.include(onProgress);
     });
 
     it('should handle progress upload', function() {
@@ -177,7 +177,7 @@ describe('Method request()', () => {
 
         let {xhr} = this.api.request('GET', '/', null, {onProgressUpload});
 
-        expect(xhr.upload.eventListeners.progress[0]).to.equal(onProgressUpload);
+        expect(xhr.upload.eventListeners.progress).to.include(onProgressUpload);
     });
 
     after(function() {

@@ -4,9 +4,6 @@
         "es6": true,
         "node": true
     },
-    "ecmaFeatures": {
-        "modules": true
-    },
     "parser": "babel-eslint",
     "rules": {
         "strict": 2,
